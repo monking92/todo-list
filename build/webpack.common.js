@@ -12,19 +12,6 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader'
       }, {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
-      }, {
-        test: /\.styl(us)?$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          'stylus-loader'
-        ]
-      }, {
         test: /\.(png|jpe?g|gif|svg)$/,
         use: [{
           loader: 'url-loader',

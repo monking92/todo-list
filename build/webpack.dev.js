@@ -5,6 +5,24 @@ const webpackBaseConfig = require('./webpack.common')
 module.exports = webpackMerge(webpackBaseConfig, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map', // original source(lines only)
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      }, {
+        test: /\.styl(us)?$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          'stylus-loader'
+        ]
+      }
+    ]
+  },
   devServer: {
     compress: true, // enable gzip compression for everything served
     contentBase: './dist',  // default: current working directory http://localhost:8080 webpackV5 -> static
