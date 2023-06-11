@@ -3,8 +3,9 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
+  context: path.resolve(__dirname, '..'),
   entry: {
-    main: path.resolve(__dirname, '..', 'src/main.js')
+    main: './src/main.js'
   },
   module: {
     rules: [
@@ -13,15 +14,17 @@ module.exports = {
         loader: 'vue-loader'
       }, {
         test: /\.(png|jpe?g|gif|svg)$/,
-        use: [{
-          loader: 'url-loader',
-          options: {
-            limit: 8 * 1024,
-            fallback: 'file-loader',
-            outputPath: 'img',
-            name: '[name].[hash:8].[ext]'
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8 * 1024,
+              fallback: 'file-loader',
+              outputPath: 'img',
+              name: '[name].[hash:8].[ext]'
+            }
           }
-        }]
+        ]
       }
     ]
   },

@@ -10,7 +10,8 @@ module.exports = webpackMerge(webpackBaseConfig, {
   mode: 'production',
   output: {
     path: path.resolve(__dirname, '..', 'dist'),
-    filename: '[name].[contenthash].js',
+    // filename: '[name].[contenthash].js',
+    filename: '[name].[chunkhash:16].js',
     // chunkFilename: ''
   },
   module: {

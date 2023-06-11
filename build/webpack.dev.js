@@ -18,6 +18,12 @@ module.exports = webpackMerge(webpackBaseConfig, {
         use: [
           'style-loader',
           'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true
+            }
+          },
           'stylus-loader'
         ]
       }
@@ -27,13 +33,13 @@ module.exports = webpackMerge(webpackBaseConfig, {
     compress: true, // enable gzip compression for everything served
     contentBase: './dist',  // default: current working directory http://localhost:8080 webpackV5 -> static
     host: '0.0.0.0',
+    port: 8088,
     hot: true,
     // open: true,
     overlay: {
       errors: true,
       warnings: true
     },
-    port: 8088,
     publicPath: '/public/', // http://localhost:8080/public/index.html
     useLocalIp: true
   },

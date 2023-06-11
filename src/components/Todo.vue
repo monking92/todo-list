@@ -37,35 +37,27 @@ export default {
   },
   beforeCreate() {
     console.log('todo beforeCreate...')
-    debugger
   },
   created() {
     console.log('todo created...')
-    debugger
   },
   beforeMount() {
     console.log('todo beforeMounted...')
-    debugger
   },
   mounted() {
     console.log('todo mounted...')
-    debugger
   },
   beforeUpdate() {
     console.log('todo beforeUpdate...')
-    debugger
   },
   update() {
     console.log('todo update...')
-    debugger
   },
   beforeDestroy() {
     console.log('todo beforeDestory...')
-    debugger
   },
   destroyed() {
     console.log('todo destroyed...')
-    debugger
   },
   data() {
     return {

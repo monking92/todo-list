@@ -8,35 +8,27 @@ new Vue({
   el: '#app',
   beforeCreate() {
     console.log('root beforeCreate...')
-    debugger
   },
   created() {
     console.log('root created...')
-    debugger
   },
   beforeMount() {
     console.log('root beforeMounted...')
-    debugger
   },
   mounted() {
     console.log('root mounted...')
-    debugger
   },
   beforeUpdate() {
     console.log('root beforeUpdate...')
-    debugger
   },
   update() {
     console.log('root update...')
-    debugger
   },
   beforeDestroy() {
     console.log('root beforeDestory...')
-    debugger
   },
   destroyed() {
     console.log('root destroyed...')
-    debugger
   },
   data: {
     a: 1,
