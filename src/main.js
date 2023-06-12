@@ -40,7 +40,6 @@ new Vue({
     }
   },
   render: (h) => {
-    debugger
     return h(App)
   }
 })

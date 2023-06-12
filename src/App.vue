@@ -4,7 +4,6 @@
     <Header></Header>
     <Todo></Todo>
     <Footer></Footer>
-    <FunnelCharts />
   </div>
 </template>
 
@@ -12,14 +11,12 @@
 import Header from './components/Header.js'
 import Todo from './components/Todo.vue'
 import Footer from './components/Footer'
-import FunnelCharts from './components/FunnelCharts'
 
 export default {
   components: {
     Header,
     Todo,
-    Footer,
-    FunnelCharts
+    Footer
   },
   beforeCreate() {
     console.log('app beforeCreate...')
