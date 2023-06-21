@@ -18,7 +18,7 @@ module.exports = {
           {
             loader: 'url-loader',
             options: {
-              limit: 8 * 1024,
+              limit: 3 * 1024,
               fallback: 'file-loader',
               outputPath: 'img',
               name: '[name].[hash:8].[ext]'

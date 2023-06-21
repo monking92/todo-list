@@ -11,7 +11,7 @@ module.exports = webpackMerge(webpackBaseConfig, {
   output: {
     path: path.resolve(__dirname, '..', 'dist'),
     // filename: '[name].[contenthash].js',
-    filename: '[name].[chunkhash:16].js',
+    filename: 'js/[name].[chunkhash:16].js',
     // chunkFilename: ''
   },
   module: {
@@ -19,7 +19,13 @@ module.exports = webpackMerge(webpackBaseConfig, {
       {
         test: /\.styl(us)?$/,
         use: [
-          MiniCssExtractPlugin.loader,
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../'
+              // publicPath: './'
+            }
+          },
           'css-loader',
           {
             loader: 'postcss-loader',
@@ -37,6 +43,9 @@ module.exports = webpackMerge(webpackBaseConfig, {
     new MiniCssExtractPlugin({
       filename: 'css/[name].[contenthash].css',
       chunkFilename: 'css/[id].[contenthash:16].css'
+      // filename: '[name].[contenthash].css',
+      // chunkFilename: '[id].[contenthash:16].css',
+
     })
   ],
   performance: {
