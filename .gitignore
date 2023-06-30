@@ -1,2 +1,4 @@
+# 忽略node_modules文件和目录
 node_modules
+# 忽略dist目录 忽略dist文件
 dist

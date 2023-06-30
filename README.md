@@ -1,3 +1,9 @@
+# 工程配置
+- `resolve.alias` 配置别名
+  - `@` 别名可在`<template> <script> <style>`直接使用
+  - `assets` 等别名在`<template> <style>`内使用前需加 `~`（loader会将其作为模块解析）
+  - `#` 作为别名在`<template> <style>`中无效 仍需将图片等资源作为模块导入
+
 
 ## 1.组件化
 ### 1.1 异步组件
