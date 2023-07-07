@@ -32,6 +32,10 @@ export default {
   font-size 10px
   color #bfbfbf
   text-shadow 0 1px 0 #999
+  P {
+    font-size: 14px
+    font-family "daoliti" !important;
+  }
   .avatar {
     img {
       width: 45px

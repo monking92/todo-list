@@ -33,6 +33,9 @@ export default {
       [
         h(
           'h1',
+          { style:
+            { 'font-family': 'daoliti' }
+          },
           ['Todo List']
         )
       ]

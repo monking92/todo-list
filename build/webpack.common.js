@@ -20,7 +20,21 @@ module.exports = {
             options: {
               limit: 3 * 1024,
               fallback: 'file-loader',
-              outputPath: 'img',
+              outputPath: 'img', // 存放路径
+              // publicPath: '', // 引用路径
+              name: '[name].[hash:8].[ext]'
+            }
+          }
+        ]
+      }, {
+        test: /\.(woff2?|ttf)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 3 * 1024,
+              fallback: 'file-loader',
+              outputPath: 'font',
               name: '[name].[hash:8].[ext]'
             }
           }
