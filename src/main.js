@@ -4,6 +4,20 @@ import App from './App.vue'
 // import './assets/style/base.styl'
 import '#/style/base.styl'
 
+// test babel
+const fn = (...params) => {
+  console.log(params)
+}
+const promise = new Promise((() => {}, () => {}))
+const set = new Set()
+let map = new Map()
+let arr = [4, 2, 6]
+fn(arr)
+
+console.log(promise)
+console.log(set)
+console.log(map)
+
 new Vue({
   el: '#app',
   beforeCreate() {
