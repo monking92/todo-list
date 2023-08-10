@@ -54,6 +54,11 @@ module.exports = webpackMerge(webpackBaseConfig, {
     maxEntrypointSize: 250000
   },
   optimization: {
+    // 默认情况下 module.id是基于 resolve 顺序递增的， resolve顺序改变 id也会改变
+    // 当 module.id 改变的时候 bundle的hash也会改变 导致打包出的bundle名也会改变
+    // // NamedModulesPlugin（v4+ 被`namedModules: true`替代） 将使用模块的路径，而不是数字标识符
+    // // 有助于在development中输出结果的可读性，但执行时间会长一些
+    // HashedModuleIdsPlugin（v4+ 被`moduleIds: true`替代） 另一个选择 推荐用于production环境
     moduleIds: 'hashed',
     minimize: true,
     minimizer: [
@@ -63,12 +68,17 @@ module.exports = webpackMerge(webpackBaseConfig, {
     splitChunks: {
       cacheGroups: {
         vendor: {
-          test: /[\\/]node_modules[\\/]/,
+          // 这可能会产生包含所有外部包的很大的 chunk。建议只引入核心框架和工具，其他依赖则动态加载
+          // test: /[\\/]node_modules[\\/]/,
+          test: /[\\/]node_modules[\\/](vue|vue-router)[\\/]/,
           name: 'vendor',
           chunks: 'all'
         }
       }
     },
+
+    // 为 `runtimeChunk: 'single'`别名
+    // 会为所有生成的 chunks 创建一个共享的 runtime 文件
     runtimeChunk: {
       name: 'runtime'
     }
