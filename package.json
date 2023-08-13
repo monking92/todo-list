@@ -34,6 +34,7 @@
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
+    "@vue/babel-preset-jsx": "^1.4.0",
     "core-js": "^2.6.12",
     "vue": "^2.6.10"
   }

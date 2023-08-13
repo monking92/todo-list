@@ -10,7 +10,8 @@
 <script>
 import Header from './components/Header.js'
 import Todo from './components/Todo.vue'
-import Footer from './components/Footer'
+// import Footer from './components/Footer'
+import Footer from './components/Footer.jsx'
 
 export default {
   components: {
