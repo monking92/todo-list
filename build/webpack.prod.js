@@ -72,9 +72,17 @@ module.exports = webpackMerge(webpackBaseConfig, {
           // test: /[\\/]node_modules[\\/]/,
           test: /[\\/]node_modules[\\/](vue|vue-router)[\\/]/,
           name: 'vendor',
-          chunks: 'all'
+          // chunks: 'all'
+          chunks: 'initial'
+        },
+        common: {
+          name: 'common',
+          minChunks: 2,
+          priority: -20,
+          chunks: 'initial',
+          reuseExistingChunk: true
         }
-      }
+      },
     },
 
     // 为 `runtimeChunk: 'single'`别名
