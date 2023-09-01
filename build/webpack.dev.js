@@ -1,10 +1,11 @@
-const webpackMerge = require('webpack-merge')
+const { merge } = require('webpack-merge')
 const webpackBaseConfig = require('./webpack.common')
+const path = require('path')
 // const webpack = require('webpack')
 
-module.exports = webpackMerge(webpackBaseConfig, {
+module.exports = merge(webpackBaseConfig, {
   mode: 'development',
-  devtool: 'cheap-module-eval-source-map', // original source(lines only)
+  devtool: 'cheap-module-source-map',
   module: {
     rules: [
       {
@@ -31,17 +32,21 @@ module.exports = webpackMerge(webpackBaseConfig, {
   },
   devServer: {
     compress: true, // enable gzip compression for everything served
-    contentBase: './dist',  // default: current working directory http://localhost:8080 webpackV5 -> static
     host: '0.0.0.0',
     port: 8088,
     hot: true,
-    // open: true,
-    overlay: {
-      errors: true,
-      warnings: true
+    open: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: true,
+        runtimeErrors: true
+      }
     },
-    publicPath: '/public/', // http://localhost:8080/public/index.html
-    useLocalIp: true
+    static: {
+      directory: path.join(__dirname, '../dist'), // current working directory
+      publicPath: '/public/' // http://localhost:8080/public/index.html visit dist/index.html
+    }
   },
   plugins: [
     // new webpack.HotModuleReplacementPlugin()  // webpack v3
