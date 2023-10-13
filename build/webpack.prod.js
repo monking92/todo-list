@@ -1,7 +1,7 @@
 const path = require('path')
 const { merge } = require('webpack-merge')
 const webpackBaseConfig = require('./webpack.common')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const TerserJSPlugin = require('terser-webpack-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
@@ -12,7 +12,8 @@ module.exports = merge(webpackBaseConfig, {
     path: path.resolve(__dirname, '..', 'dist'),
     // filename: '[name].[contenthash].js',
     filename: 'js/[name].[chunkhash:16].js',
-    // chunkFilename: ''
+    // chunkFilename: '',
+    clean: true
   },
   module: {
     rules: [
@@ -39,7 +40,7 @@ module.exports = merge(webpackBaseConfig, {
     ]
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    // new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'css/[name].[contenthash].css',
       chunkFilename: 'css/[id].[contenthash:16].css'
@@ -59,31 +60,34 @@ module.exports = merge(webpackBaseConfig, {
     // // NamedModulesPlugin（v4+ 被`namedModules: true`替代） 将使用模块的路径，而不是数字标识符
     // // 有助于在development中输出结果的可读性，但执行时间会长一些
     // HashedModuleIdsPlugin（v4+ 被`moduleIds: true`替代） 另一个选择 推荐用于production环境
-    moduleIds: 'hashed',
+    // moduleIds: 'hashed',
+    // moduleIds: 'deterministic', // use default
     minimize: true,
     minimizer: [
       new TerserJSPlugin({}),
       new CssMinimizerPlugin({})
     ],
-    splitChunks: {
-      cacheGroups: {
-        vendor: {
-          // 这可能会产生包含所有外部包的很大的 chunk。建议只引入核心框架和工具，其他依赖则动态加载
-          // test: /[\\/]node_modules[\\/]/,
-          test: /[\\/]node_modules[\\/](vue|vue-router)[\\/]/,
-          name: 'vendor',
-          // chunks: 'all'
-          chunks: 'initial'
-        },
-        common: {
-          name: 'common',
-          minChunks: 2,
-          priority: -20,
-          chunks: 'initial',
-          reuseExistingChunk: true
-        }
-      },
-    },
+
+    // 推荐使用默认值 或 splitChunks: { chunks: 'all' }
+    // splitChunks: {
+    //   cacheGroups: {
+    //     vendor: {
+    //       // 这可能会产生包含所有外部包的很大的 chunk。建议只引入核心框架和工具，其他依赖则动态加载
+    //       // test: /[\\/]node_modules[\\/]/,
+    //       test: /[\\/]node_modules[\\/](vue|vue-router)[\\/]/,
+    //       name: 'vendor',
+    //       // chunks: 'all'
+    //       chunks: 'initial'
+    //     },
+    //     common: {
+    //       name: 'common',
+    //       minChunks: 2,
+    //       priority: -20,
+    //       chunks: 'initial',
+    //       reuseExistingChunk: true
+    //     }
+    //   },
+    // },
 
     // 为 `runtimeChunk: 'single'`别名
     // 会为所有生成的 chunks 创建一个共享的 runtime 文件

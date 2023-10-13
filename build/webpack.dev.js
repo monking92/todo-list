@@ -5,7 +5,7 @@ const path = require('path')
 
 module.exports = merge(webpackBaseConfig, {
   mode: 'development',
-  devtool: 'cheap-module-source-map',
+  devtool: 'eval-cheap-module-source-map',
   module: {
     rules: [
       {
