@@ -17,15 +17,18 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader'
-          // options: {
-          //   presets: [
-          //     "@babel/preset-env",
-          //     {
-          //       "useBuiltIns": "usage",
-          //       "corejs": "2.6.12"
-          //     }
-          //   ]
-          // }
+          /* options: {
+            presets: [
+              [
+                "@babel/preset-env",
+                {
+                  "useBuiltIns": "usage",
+                  "corejs": "2.6.12"
+                },
+              ],
+              "@vue/babel-preset-jsx"
+            ]
+          } */
         }
       }, {
         test: /\.(png|jpe?g|gif|svg)$/,
@@ -86,6 +89,11 @@ module.exports = {
       'assets': path.resolve(__dirname, '../src/assets'),
     },
     extensions: ['.js', '.vue', '.jsx']
+  },
+  resolveLoader: {
+    modules: [path.resolve(__dirname, '../loaders'), 'node_modules'],
+    extensions: ['.mjs'],
+    // mainFields: ['loader']
   },
   plugins: [
     new VueLoaderPlugin(),
