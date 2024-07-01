@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
-    main: './src/main.js'
+    main: './client/main.js'
   },
   module: {
     rules: [
@@ -84,9 +84,9 @@ module.exports = {
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '../src'),
-      '#': path.resolve(__dirname, '../src/assets'),
-      'assets': path.resolve(__dirname, '../src/assets'),
+      '@': path.resolve(__dirname, '../client'),
+      '#': path.resolve(__dirname, '../client/assets'),
+      'assets': path.resolve(__dirname, '../client/assets'),
     },
     extensions: ['.js', '.vue', '.jsx']
   },

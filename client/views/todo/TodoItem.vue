@@ -45,10 +45,10 @@ export default {
     appearance: none
     outline none
     &::after{
-      content url('../assets/img/round.svg')
+      content url('#/img/round.svg')
     }
     &:checked::after{
-      content url('../assets/img/done.svg')
+      content url('#/img/done.svg')
     }
   }
   label {

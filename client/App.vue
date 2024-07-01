@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import Header from './components/Header.js'
-import Todo from './components/Todo.vue'
-// import Footer from './components/Footer'
-import Footer from './components/Footer.jsx'
+import Header from './layout/Header.js'
+import Todo from './views/todo/Todo.vue'
+// import Footer from './layout/Footer'
+import Footer from './layout/Footer.jsx'
 
 export default {
   components: {
@@ -34,8 +34,8 @@ export default {
   beforeUpdate() {
     console.log('app beforeUpdate...')
   },
-  update() {
-    console.log('app update...')
+  updated() {
+    console.log('app updated...')
   },
   beforeDestroy() {
     console.log('app beforeDestroy...')
