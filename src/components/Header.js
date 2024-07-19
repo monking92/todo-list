@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import '#/style/header.styl'
 
 export default {
@@ -26,7 +27,7 @@ export default {
   destroyed() {
     console.log('head destroyed...')
   },
-  render(h) {
+  render() {
     return h(
       'header',
       { class: 'header' },

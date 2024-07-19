@@ -7,7 +7,7 @@ export default {
     }
   },
 
-  render(h) {
+  render() {
     return (
       <footer class="footer">
         <p>written by { this.author }(jsx)</p>

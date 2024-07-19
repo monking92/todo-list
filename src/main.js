@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { createApp, h } from 'vue'
 import App from './App.vue'
 
 // import './assets/style/base.styl'
@@ -18,8 +18,7 @@ console.log(promise)
 console.log(set)
 console.log(map)
 
-new Vue({
-  el: '#app',
+const app = createApp({
   beforeCreate() {
     console.log('root beforeCreate...')
   },
@@ -44,16 +43,18 @@ new Vue({
   destroyed() {
     console.log('root destroyed...')
   },
-  data: {
+  data: () => ({
     a: 1,
     b: 2
-  },
+  }),
   methods: {
     logA() {
       console.log('logA: ', this.a)
     }
   },
-  render: (h) => {
+  render: () => {
     return h(App)
   }
 })
+
+app.mount('#app')
