@@ -1,5 +1,6 @@
 import { createApp, h } from 'vue'
 import App from './App.vue'
+import router from '@/router/index'
 
 // import './assets/style/base.styl'
 import '#/style/base.styl'
@@ -57,4 +58,5 @@ const app = createApp({
   }
 })
 
+app.use(router)
 app.mount('#app')

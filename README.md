@@ -45,3 +45,84 @@ Vue.component('async-higher', () => ({
 
 # 2.响应式原理
 1. `Object.defineProperty`定义响应式对象(getter setter)
+
+
+
+# vue 升级
+## vue 3.x
+
+## vue-router v4.x
+
+### vue-router 插件职责
+1. 全局注册 `RouterView` 和 `RouterLink`组件
+2. 添加全局 `$router` 和 `$route` 属性
+3. 启用`useRouter()` 和 `useRoute()` 组合式函数
+4. 触发路由器解析初始路由
+
+### 完整的导航解析流程
+1. 导航被触发
+2. 在失活的组件里调用 `beforeRouteLeave`守卫
+3. 调用全局的 `beforeEach`
+4. 在重用的组件里调用 `beforeRouteUpdate` (2.2+)
+5. 在路由配置里调用 `beforeEnter`
+6. 解析异步路由组件
+7. 在被激活的组件里调用 `beforeRouteEnter`
+8. 调用全局的 `beforeResolve` (2.5+)
+9. 导航被确认
+10. 调用全局的 `afterEach`
+11. 触发DOM更新
+12. 调用 `beforeRouteEnter` 守卫中传给 `next` 的回调函数，创建好的组件实例会作为回调函数的参数传入
+
+### [改动](https://router.vuejs.org/zh/guide/migration/)
+#### 1. `createRouter`
+- v3
+```javascript
+// @/router/index.js
+// 避免服务器端渲染内存溢出
+import Router from 'vue-router'
+export default () => {
+  return new Router({
+
+  })
+}
+```
+
+- v4
+```javascript
+// @/router/index.js
+import { createRouter, createWebHashHistory } from 'vue-router'
+
+export default createRouter({
+  history: createWebHashHistory()
+
+})
+```
+
+#### 2. `app.use(router)`
+```javascript
+import { createApp } from 'vue'
+import router from '@/router/index'
+
+const app = createApp({})
+
+app.use(router)
+```
+
+#### 3. `<router-view />`
+- v3
+```tpl
+<transition name="fade">
+  <router-view />
+</transition>
+```
+
+- v4
+```tpl
+<router-view v-slot="{ Component }">
+  <transition name="fade">
+    <Component :is="Component" />
+  </transition>
+</router-view>
+```
+
+### 

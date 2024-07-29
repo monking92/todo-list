@@ -2,21 +2,31 @@
   <div class="app">
     <div class="cover"></div>
     <Header></Header>
-    <Todo></Todo>
+
+    <router-link to="/index">go to index</router-link>
+    <router-link to="/login">go to login</router-link>
+    <router-link to="/login/exact">go to login exact</router-link>
+
+    <!-- v-enter-from -> v-enter-active -> v-enter-to -->
+    <!-- v-leave-from -> v-leave-active -> v-leave-to -->
+    <router-view v-slot="{ Component }">
+      <transition name="fade">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+
     <Footer></Footer>
   </div>
 </template>
 
 <script>
 import Header from './components/Header.js'
-import Todo from './components/Todo.vue'
 // import Footer from './components/Footer'
 import Footer from './components/Footer.jsx'
 
 export default {
   components: {
     Header,
-    Todo,
     Footer
   },
   beforeCreate() {
@@ -68,5 +78,12 @@ export default {
     opacity .9
     z-index -1
   }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0
 }
 </style>
