@@ -125,4 +125,122 @@ app.use(router)
 </router-view>
 ```
 
-### 
+
+## pinia
+### 对比vuex
+- 弃用 `mutation`
+- 无需动态添加 `Store`，默认都是动态的
+- 不再有嵌套结构的模块
+- 不再有可命名的模块
+
+### store
+#### `storeToRefs()` 从 Store 解构
+```javascript
+import { storeToRefs } from 'pinia'
+
+const store = useCounterStore()
+// 破坏了响应性
+// const { name, doubleCount } = store
+
+const { name, doubleCount } = storeToRefs(store)
+// 作为 action 的 increment 可以直接解构
+const { increment } = store
+```
+
+### state
+#### 重置`state` `$reset()`
+- 选项式API
+`$reset()` 内部，会调用 `state()` 函数来创建一个新的状态对象，并用它替换当前状态
+```javascript
+const store = useStore();
+store.$reset();
+```
+
+- 组合式API
+```javascript
+const useCounterStore = defineStore('counter', () => {
+  const count = ref(0);
+
+  function $reset() {
+    count.value = 0;
+  }
+
+  return { count, $reset };
+});
+```
+
+#### 修改`state`
+##### `mapWritableState()`
+`mapWritableState()` 不能像 `mapState()` 一样传递一个函数
+```javascript
+import { mapWritableState } from 'pinia';
+import { useCounterStore } from '../stores/counter';
+
+export default {
+  computed: {
+    // 可以访问组件中的 `this.count` 并允许设置它
+    // this.count++
+    // 与从 store.count 中读取的数据相同
+    ...mapWritableState(useCounterStore, ['count']),
+    // 与上述相同，但将其注册为 this.myOwnName
+    ...mapWritableState(useCounterStore, {
+      myOwnName: 'count'
+    })
+  }
+}
+```
+
+##### `$patch()`
+- 可同时更改多个属性
+```javascript
+store.$patch({
+  count: store.count + 1,
+  age: 120,
+  name: 'DIO'
+});
+```
+
+- 接受函数
+```javascript
+store.$patch((state) => {
+  state.items.push({ name: 'shoes', quantity: 1 }),
+  state.hasChanged = true
+});
+```
+
+#### 订阅`state` `$subscrible()`
+`$subscrible()` 相比 `watch()` 在patch后只触发一次
+```javascript
+cartStore.$subscrible((mutation, state) => {
+  // import { MutationType } from 'pinia'
+  mutation.type // 'direct' | 'patch object' | 'patch function'
+  // 和 cartStore.$id 一样
+  mutation.storeId // 'cart'
+  // 只有 mutation.type === 'patch object' 的情况下才可用
+  mutation.payload // 传递给 cartStore.$patch()的补丁对象
+}, {
+  // 在组件卸载之后仍会保留
+  detached: true
+});
+```
+
+### action
+#### `mapActions`
+```javascript
+import { mapActions } from 'pinia';
+import { useCounterStore } from '../stores/counter';
+
+export default {
+  methods: {
+    // 访问组件内的 this.increment()
+    // 与从 store.increment() 调用相同
+    ...mapActions(useCounterStore, ['increment'])
+    ...mapActions(useCounterStore, { myOwnName: 'increment' })
+  }
+}
+```
+
+#### [订阅action `store.$onAction`](https://pinia.vuejs.org/zh/core-concepts/actions.html#subscribing-to-actions)
+
+
+### [插件](https://pinia.vuejs.org/zh/core-concepts/plugins.html)
