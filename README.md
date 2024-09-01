@@ -51,6 +51,227 @@ Vue.component('async-higher', () => ({
 # vue 升级
 ## vue 3.x
 
+### `setup`
+![一种特殊的生命周期](https://vuejs.org/assets/lifecycle.MuZLBFAS.png)
+所有生命周期都应该在 `setup()` 阶段被同步调用
+
+#### 1. `setup` 使用
+- *场景1：* 在 options api 组件内集成基于 composition api 代码
+```javascript
+import { toRefs, toRef } from 'vue'
+
+// 直接解构 props 会丢失响应性
+setup(props, context) {
+  // 1. props
+  // 将 `props` 转为一个其中全是 ref 的对象，然后解构
+  const { title } = toRefs(props)
+
+  // 或者，将 `props` 的单个属性转为一个 ref
+  const title = toRef(props, 'title')
+
+
+  // 2. context
+  // context: {
+  //   attrs, // $attrs
+  //   slots, // $slots
+  //   emit, // $emit
+  //   expose
+  // }
+
+  return {
+    // ...
+  }
+}
+```
+
+- *场景2：* 单文件组件内使用 composition api
+```html
+<script setup>
+// ...
+</script>
+```
+
+
+#### 2. 分析 `setup()`
+
+为什么：
+1. 返回值会暴露给模板和其他的 options api 勾子
+2. 返回的 `ref` 会自动解包 `<template>`、`this` 访问无须 `.value`
+3. `setup()` 内无组件实例的访问权（`this` -> `undefined`）
+
+- SFC
+```html
+<template>
+  <h1>{{ title }}</h1>
+  <p>{{ description }}</p>
+
+  <Child />
+</template>
+
+<script>
+import { ref } from 'vue'
+import Child from './child.vue'
+
+export default {
+  components: {
+    Child
+  },
+
+  setup() {
+    const title = 'hello setup'
+    const description = ref('this is introduce setup()')
+
+    return {
+      title,
+      description
+    }
+  }
+}
+</script>
+```
+
+- SFC `<template>` 编译为 `render()`
+```js
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */
+__webpack_require__.d(__webpack_exports__, {
+  /* harmony export */
+  render: function() {
+    return /* binding */ render;
+  }
+
+  /* harmony export */
+});
+
+/* harmony import */
+var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/.pnpm/vue@3.4.32/node_modules/vue/dist/vue.runtime.esm-bundler.js");
+
+var _hoisted_1 = {
+  class: "hello-setup-title"
+};
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_Child = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Child");
+
+  return 
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), // openBlock()
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)( // createElementBlock()
+      vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, // Fragment
+      null,
+      [
+        (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
+          "h1",
+          _hoisted_1,
+          (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.title),
+          1 /* TEXT */
+        ),
+        (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)(
+          "p",
+          null,
+          (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.description),
+          1 /* TEXT */
+        ),
+        (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Child)
+      ],
+      64 /* STABLE_FRAGMENT */
+    );
+}
+```
+
+- `render(_ctx, _cache, $props, $setup, $data, $options)`
+```js
+// runtime-core.esm-bundler.js
+function renderComponentRoot(instance) {
+  // instance.setupState
+  const { render, proxy, withProxy, renderCache, props, setupState } = instance;
+  const proxyToUse = withProxy || proxy;
+  render.call(thisProxy, proxyToUse, renderCache, props, setupState);
+}
+```
+
+- `$setup` 与 `setup() {}`
+```js
+// // runtime-core.esm-bundler.js
+function setupStatefulComponent(instance) {
+  // ...
+  const { setup } = Component; // SFC 编译后的js对象
+  const stepupResult = callWithErrorHandling(setup, instance);
+  handleSetupResult(instance, setupResult);
+}
+
+
+function handleSetupResult(instance, setupResult) {
+  instance.setupState = proxyRefs(setupResult)
+}
+
+// reactivity.esm-bundler.js
+function proxyRefs(objectWithRefs) {
+  return isReactive(objectWithRefs) ? objectWithRefs : new Proxy(objectWithRefs, shallowUnwrapHandlers);
+}
+
+const shallowUnwrapHandlers = {
+  get: (target, key, receiver) => unref(Reflect.get(target, key, receiver)),
+  set: (target, key, value, receiver) => {
+    const oldValue = target[key];
+    if (isRef(oldValue) && !isRef(value)) {
+      oldValue.value = value;
+      return true;
+    } else {
+      return Reflect.set(target, key, value, receiver);
+    }
+  }
+}
+
+function unref(ref2) {
+  return isRef(ref2) ? ref2.value : ref2;
+}
+```
+
+> - `<template>` -> 
+> - `render(_ctx, _cache, $props, $setup, $data, $options)` ->
+> - `setup() { return obj }` ->
+> - `setupStatefulComponent(instance)` ->
+> - `render()` `instance.setupState` -> `$setup`
+
+
+#### 3. 下回分解 `<script setup>`
+
+为什么：
+1. `defineProps` `defineEmits` 等宏只能在 setup 顶层使用，且不需要导入
+2. import 的组件无需components注册可以直接使用？
+3. 定义在顶层的变量可以直接在 `<template>` 中使用
+
+- SFC
+```html
+<template>
+  <h2 class="hello-setup-title">{{ title }}</h2>
+  <p>{{ description }}</p>
+
+  <span>{{ year }}</span>
+  <Child name="<script setup>" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import Child from './child.vue'
+
+const title = 'hello setup'
+const description = ref('this is introduce setup')
+
+if (description.value) {
+  defineProps({
+    year: {
+      type: String,
+      default: '2024'
+    }
+  })
+}
+</script>
+```
+ERROR: defineProps is not defined
+
+
+
 ## vue-router v4.x
 
 ### vue-router 插件职责

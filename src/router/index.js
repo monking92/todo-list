@@ -1,9 +1,10 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import helloRoutes from './hello'
 
 export default createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes: routes.concat(helloRoutes),
   // strict: true, // 应用到所有路由
   linkActiveClass: 'active-link',
   linkExactActiveClass: 'exact-active-link',
